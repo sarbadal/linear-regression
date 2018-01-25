@@ -1,12 +1,14 @@
 import statsmodels.formula.api as smf
 
-def forward_selected(data, y, Intercept=True, erbose=True):
+def forward_selection(data, y, Intercept=True, verbose=True):
     """
     Linear model designed by forward selection.
     Parameters:
     -----------
     data : pandas DataFrame with all possible predictors and y
-    y: string, name of y column in data
+    y : string, name of y column in data
+    Intercept : bool parameter. Whether we want Intercept in regression model or not
+    verbose : bool parameter. if True the it will print out the steps of adding variables
 
     Returns:
     --------
@@ -18,18 +20,16 @@ def forward_selected(data, y, Intercept=True, erbose=True):
 
     step = 1
     result = []
-    reg_df_tmp = data.copy()
-    # print(step, 'The sample data has', len(reg_df_tmp), 'records.')
-    
+    reg_df_tmp = data.copy()   
     remaining = set(reg_df_tmp.columns)
     str_gap = max([len(c) for c in list(remaining)])+2
     
-
+    # setting the first line of summary print...
     str_len = str_gap + 22 - len(' Forward Selection Summary ')
     star_str = '='*int(str_len/2)
     str_to_print = ''.join((star_str,' Forward Selection Summary ',star_str))
-    if erbose: print('')
-    if erbose: print(str_to_print)
+    if verbose: print('')
+    if verbose: print(str_to_print)
 
     remaining.remove(y)
     selected = []
@@ -52,7 +52,7 @@ def forward_selected(data, y, Intercept=True, erbose=True):
             selected.append(best_candidate)
             current_score = best_new_score
 
-            if erbose:
+            if verbose: # variable add print 
                 if sl_no==0:
                     print('Sl.No. {:<{width}} Adj. R-squared'.format('Variable Added', width=str_gap))
                     print('-'*int(str_gap+22))
@@ -60,17 +60,18 @@ def forward_selected(data, y, Intercept=True, erbose=True):
                 sl_no += 1
                 print('{:<6} {:<{width}} {:.6}'.format(sl_no, best_candidate, best_new_score, width=str_gap))
     
+    # setting the last line of summary print...
     str_len = str_gap + 22 - len(' Forward Selection End ')
     star_str = '='*int(str_len/2)
     str_to_print = ''.join((star_str,' Forward Selection End ',star_str))
-    if erbose: print(str_to_print)
+    if verbose: print(str_to_print)
 
     if Intercept==True: formula = "{} ~ {} + 1".format(y, ' + '.join(selected))
     else: formula = "{} ~ {} + 0".format(y, ' + '.join(selected))
     model = smf.ols(formula, reg_df_tmp).fit()
     result.append([selected, model.rsquared_adj, model])
     step += 1
-    if erbose: print('')
-    if erbose: print(model.summary())
+    if verbose: print('')
+    if verbose: print(model.summary())
     del reg_df_tmp
     return [selected, model]

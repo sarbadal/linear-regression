@@ -1,11 +1,11 @@
 import pandas as pd
-import statsmodels.api as smf
+import statsmodels.formula.api as smf
 
 def stepwise_selection(data, y, Intercept=True, initial_list=[], threshold_in=0.01, threshold_out=0.05, verbose=True):
     """ Perform a forward-backward feature selection 
     based on p-value from statsmodels.api.ols
     Arguments:
-        X - pandas.DataFrame with candidate features
+        X - pandas.DataFrame with candidate features and y
         y - list-like with the target
         initial_list - list of features to start with (column names of X)
         threshold_in - include a feature if its p-value < threshold_in

@@ -2,10 +2,10 @@ import statsmodels.formula.api as smf
 import pandas as pd
 import numpy as np
 
-def vif_cal(input_data, dependent_col):
+def vif_cal(data, y):
     """ Code for VIF Calculation. Writing a function to calculate the VIF values """
     
-    x_vars=input_data.drop([dependent_col], axis=1)
+    x_vars=data.drop([y], axis=1)
     xvar_names=x_vars.columns.tolist()
     x_var_col, vif_list = [], []
     str_gap = max([len(c) for c in xvar_names])+2

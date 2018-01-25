@@ -2,9 +2,9 @@ from scipy.stats import pearsonr
 import numpy as np
 import pandas as pd
     
-def corr_pvalue(df):
+def corr_pvalue(data):
 
-    numeric_df = df.dropna()._get_numeric_data()
+    numeric_df = data.dropna()._get_numeric_data()
     cols = numeric_df.columns
     mat = numeric_df.values
 
